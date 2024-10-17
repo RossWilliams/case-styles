@@ -159,6 +159,7 @@ interface ArrayTypes {
   arrayOfArrayOfString: string[][];
   optionalArrayOfArrayofString1?: string[][];
   arrayOfOptionalArrayOfString: Array<string[] | undefined>;
+  arrayOfOptionalArrayOfObject: Array<{ prop1: string }[] | undefined>;
 }
 
 type SnakeArrayTypes = ObjectToSnake<ArrayTypes>;
@@ -168,6 +169,7 @@ const _snakeArrays1: SnakeArrayTypes = {
   array_of_array_of_string: [['a']],
   array_of_optional_array_of_string: [['a']],
   optional_array_of_string: ['a'],
+  array_of_optional_array_of_object: [[{ prop_1: '' }]],
 };
 
 const _snakeArrays2: SnakeArrayTypes = {
@@ -175,6 +177,7 @@ const _snakeArrays2: SnakeArrayTypes = {
   array_of_array_of_string: [['a']],
   array_of_optional_array_of_string: [undefined],
   optional_array_of_string: undefined,
+  array_of_optional_array_of_object: [undefined],
 };
 
 const _camelArrays1: ObjectToCamel<ArrayTypes> = {
@@ -182,6 +185,7 @@ const _camelArrays1: ObjectToCamel<ArrayTypes> = {
   arrayOfArrayOfString: [['a']],
   arrayOfOptionalArrayOfString: [['a']],
   optionalArrayOfString: ['a'],
+  arrayOfOptionalArrayOfObject: [[{ prop1: '' }]],
 };
 
 const _camelArrays2: ObjectToCamel<ArrayTypes> = {
@@ -189,6 +193,7 @@ const _camelArrays2: ObjectToCamel<ArrayTypes> = {
   arrayOfArrayOfString: [['a']],
   arrayOfOptionalArrayOfString: [undefined],
   optionalArrayOfString: undefined,
+  arrayOfOptionalArrayOfObject: [undefined],
 };
 
 // Bug #78
@@ -220,4 +225,58 @@ const _pascalDate: ObjectToPascal<{
   MyDate: new Date(),
   ArrDate: [new Date()],
   Nested: { InnerDate: new Date() },
+};
+
+const _snakeStringUnion: ObjectToSnake<{
+  propName: ('a' | 'b' | 'c')[];
+}> = {
+  prop_name: ['a', 'b', 'c'],
+};
+
+const _snakeNumberUnion: ObjectToSnake<{
+  propName: (1 | 2 | 3)[];
+}> = {
+  prop_name: [1, 2, 3],
+};
+
+const _snakeUndefined: ObjectToSnake<{
+  propName: undefined;
+}> = {
+  prop_name: undefined,
+};
+
+const _camelStringUnion: ObjectToCamel<{
+  prop_name: ('a' | 'b' | 'c')[];
+}> = {
+  propName: ['a', 'b', 'c'],
+};
+
+const _camelNumberUnion: ObjectToCamel<{
+  prop_name: (1 | 2 | 3)[];
+}> = {
+  propName: [1, 2, 3],
+};
+
+const _camelUndefined: ObjectToCamel<{
+  prop_name: undefined;
+}> = {
+  propName: undefined,
+};
+
+const _pascalStringUnion: ObjectToPascal<{
+  propName: ('a' | 'b' | 'c')[];
+}> = {
+  PropName: ['a', 'b', 'c'],
+};
+
+const _pascalNumberUnion: ObjectToPascal<{
+  propName: (1 | 2 | 3)[];
+}> = {
+  PropName: [1, 2, 3],
+};
+
+const _pascalUndefined: ObjectToPascal<{
+  propName: undefined;
+}> = {
+  PropName: undefined,
 };
