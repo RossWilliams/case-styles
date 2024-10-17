@@ -106,13 +106,13 @@ export function objectToPascal<T extends object>(obj: T): ObjectToPascal<T> {
 }
 
 type Primitive =
+  | boolean
+  | number
+  | string
   | Date
   | Uint8Array
   | null
-  | undefined
-  | string
-  | number
-  | boolean;
+  | undefined;
 
 export type ToCamel<S extends string | number | symbol> = S extends string
   ? S extends `${infer Head}_${infer Tail}`
@@ -124,19 +124,17 @@ export type ToCamel<S extends string | number | symbol> = S extends string
 
 export type ObjectToCamel<T> = T extends Primitive
   ? T
-  : T extends Array<infer U>
+  : T extends Array<infer ArrayType>
   ? Array<
-      U extends Array<infer N>
-        ? N extends Primitive
-          ? U
-          : Array<ObjectToCamel<N>>
-        : ObjectToCamel<U>
+      ArrayType extends Array<infer InnerArrayType>
+        ? InnerArrayType extends Primitive
+          ? ArrayType
+          : Array<ObjectToCamel<InnerArrayType>>
+        : ObjectToCamel<ArrayType>
     >
-  : T extends object
-  ? {
+  : {
       [K in keyof T as ToCamel<string & K>]: ObjectToCamel<T[K]>;
-    }
-  : T;
+    };
 
 export type ToPascal<S extends string | number | symbol> = S extends string
   ? S extends `${infer Head}_${infer Tail}`
@@ -148,19 +146,17 @@ export type ToPascal<S extends string | number | symbol> = S extends string
 
 export type ObjectToPascal<T> = T extends Primitive
   ? T
-  : T extends Array<infer U>
+  : T extends Array<infer ArrayType>
   ? Array<
-      U extends Array<infer N>
-        ? N extends Primitive
-          ? U
-          : Array<ObjectToPascal<N>>
-        : ObjectToPascal<U>
+      ArrayType extends Array<infer InnerArrayType>
+        ? InnerArrayType extends Primitive
+          ? ArrayType
+          : Array<ObjectToPascal<InnerArrayType>>
+        : ObjectToPascal<ArrayType>
     >
-  : T extends object
-  ? {
+  : {
       [K in keyof T as ToPascal<string & K>]: ObjectToPascal<T[K]>;
-    }
-  : T;
+    };
 
 export type ToSnake<S extends string | number | symbol> = S extends string
   ? S extends `${infer Head}${CapitalChars}${infer Tail}` // string has a capital char somewhere
@@ -211,19 +207,17 @@ export type ToSnake<S extends string | number | symbol> = S extends string
 
 export type ObjectToSnake<T> = T extends Primitive
   ? T
-  : T extends Array<infer U>
+  : T extends Array<infer ArrayType>
   ? Array<
-      U extends Array<infer N>
-        ? N extends Primitive
-          ? U
-          : Array<ObjectToSnake<N>>
-        : ObjectToSnake<U>
+      ArrayType extends Array<infer InnerArrayType>
+        ? InnerArrayType extends Primitive
+          ? ArrayType
+          : Array<ObjectToSnake<InnerArrayType>>
+        : ObjectToSnake<ArrayType>
     >
-  : T extends object
-  ? {
+  : {
       [K in keyof T as ToSnake<string & K>]: ObjectToSnake<T[K]>;
-    }
-  : T;
+    };
 
 type CapitalLetters =
   | 'A'
