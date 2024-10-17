@@ -105,6 +105,15 @@ export function objectToPascal<T extends object>(obj: T): ObjectToPascal<T> {
   return convertObject(obj, toPascal);
 }
 
+type Primitive =
+  | boolean
+  | number
+  | string
+  | Date
+  | Uint8Array
+  | null
+  | undefined;
+
 export type ToCamel<S extends string | number | symbol> = S extends string
   ? S extends `${infer Head}_${infer Tail}`
     ? `${ToCamel<Uncapitalize<Head>>}${Capitalize<ToCamel<Tail>>}`
@@ -113,31 +122,19 @@ export type ToCamel<S extends string | number | symbol> = S extends string
     : Uncapitalize<S>
   : never;
 
-export type ObjectToCamel<T extends object | undefined | null> =
-  T extends undefined
-    ? undefined
-    : T extends null
-    ? null
-    : T extends Array<infer ArrayType>
-    ? ArrayType extends object
-      ? Array<ObjectToCamel<ArrayType>>
-      : Array<ArrayType>
-    : T extends Uint8Array
-    ? Uint8Array
-    : T extends Date
-    ? Date
-    : {
-        [K in keyof T as ToCamel<K>]: T[K] extends
-          | Array<infer ArrayType>
-          | undefined
-          | null
-          ? ArrayType extends object
-            ? Array<ObjectToCamel<ArrayType>>
-            : Array<ArrayType>
-          : T[K] extends object | undefined | null
-          ? ObjectToCamel<T[K]>
-          : T[K];
-      };
+export type ObjectToCamel<T> = T extends Primitive
+  ? T
+  : T extends Array<infer ArrayType>
+  ? Array<
+      ArrayType extends Array<infer InnerArrayType>
+        ? InnerArrayType extends Primitive
+          ? ArrayType
+          : Array<ObjectToCamel<InnerArrayType>>
+        : ObjectToCamel<ArrayType>
+    >
+  : {
+      [K in keyof T as ToCamel<string & K>]: ObjectToCamel<T[K]>;
+    };
 
 export type ToPascal<S extends string | number | symbol> = S extends string
   ? S extends `${infer Head}_${infer Tail}`
@@ -147,31 +144,19 @@ export type ToPascal<S extends string | number | symbol> = S extends string
     : Capitalize<S>
   : never;
 
-export type ObjectToPascal<T extends object | undefined | null> =
-  T extends undefined
-    ? undefined
-    : T extends null
-    ? null
-    : T extends Array<infer ArrayType>
-    ? ArrayType extends object
-      ? Array<ObjectToPascal<ArrayType>>
-      : Array<ArrayType>
-    : T extends Uint8Array
-    ? Uint8Array
-    : T extends Date
-    ? Date
-    : {
-        [K in keyof T as ToPascal<K>]: T[K] extends
-          | Array<infer ArrayType>
-          | undefined
-          | null
-          ? ArrayType extends object
-            ? Array<ObjectToPascal<ArrayType>>
-            : Array<ArrayType>
-          : T[K] extends object | undefined | null
-          ? ObjectToPascal<T[K]>
-          : T[K];
-      };
+export type ObjectToPascal<T> = T extends Primitive
+  ? T
+  : T extends Array<infer ArrayType>
+  ? Array<
+      ArrayType extends Array<infer InnerArrayType>
+        ? InnerArrayType extends Primitive
+          ? ArrayType
+          : Array<ObjectToPascal<InnerArrayType>>
+        : ObjectToPascal<ArrayType>
+    >
+  : {
+      [K in keyof T as ToPascal<string & K>]: ObjectToPascal<T[K]>;
+    };
 
 export type ToSnake<S extends string | number | symbol> = S extends string
   ? S extends `${infer Head}${CapitalChars}${infer Tail}` // string has a capital char somewhere
@@ -220,31 +205,19 @@ export type ToSnake<S extends string | number | symbol> = S extends string
     : S /* 'abc'  */
   : never;
 
-export type ObjectToSnake<T extends object | undefined | null> =
-  T extends undefined
-    ? undefined
-    : T extends null
-    ? null
-    : T extends Array<infer ArrayType>
-    ? ArrayType extends object
-      ? Array<ObjectToSnake<ArrayType>>
-      : Array<ArrayType>
-    : T extends Uint8Array
-    ? Uint8Array
-    : T extends Date
-    ? Date
-    : {
-        [K in keyof T as ToSnake<K>]: T[K] extends
-          | Array<infer ArrayType>
-          | undefined
-          | null
-          ? ArrayType extends object
-            ? Array<ObjectToSnake<ArrayType>>
-            : Array<ArrayType>
-          : T[K] extends object | undefined | null
-          ? ObjectToSnake<T[K]>
-          : T[K];
-      };
+export type ObjectToSnake<T> = T extends Primitive
+  ? T
+  : T extends Array<infer ArrayType>
+  ? Array<
+      ArrayType extends Array<infer InnerArrayType>
+        ? InnerArrayType extends Primitive
+          ? ArrayType
+          : Array<ObjectToSnake<InnerArrayType>>
+        : ObjectToSnake<ArrayType>
+    >
+  : {
+      [K in keyof T as ToSnake<string & K>]: ObjectToSnake<T[K]>;
+    };
 
 type CapitalLetters =
   | 'A'
